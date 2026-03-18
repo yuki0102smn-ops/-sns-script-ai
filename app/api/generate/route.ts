@@ -14,13 +14,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const response = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 2048,
-      messages: [
-        {
-          role: "user",
-          content: `あなたはSNSマーケティングと動画編集のプロです。以下の情報をもとに、${platform}でバズるショート動画（30秒以内）のスクリプトを作成してください。
+    const isTextPlatform = platform === "Threads" || platform === "X(Twitter)";
+
+    const prompt = isTextPlatform
+      ? `あなたはSNSマーケティングのプロです。以下の情報をもとに、${platform}でバズるテキスト投稿を作成してください。
+
+商品/サービス: ${product}
+ターゲット: ${target}
+プラットフォーム: ${platform}
+
+以下の形式で出力してください：
+
+【投稿文】
+[読んだ人が思わず止まるフックから始まり、価値を伝え、行動を促す投稿文。Threadsなら500文字以内、Xなら140文字以内]
+
+【ハッシュタグ】
+[5〜8個]
+
+【投稿のポイント】
+1. [フックのTips]
+2. [構成のTips]
+3. [エンゲージメントを上げるTips]`
+      : `あなたはSNSマーケティングと動画編集のプロです。以下の情報をもとに、${platform}でバズるショート動画（30秒以内）のスクリプトを作成してください。
 
 商品/サービス: ${product}
 ターゲット: ${target}
@@ -42,7 +57,15 @@ export async function POST(request: NextRequest) {
 【編集のポイント】
 1. [カット・テンポのTips]
 2. [テロップのTips]
-3. [BGM・効果音のTips]`,
+3. [BGM・効果音のTips]`;
+
+    const response = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 2048,
+      messages: [
+        {
+          role: "user",
+          content: prompt,
         },
       ],
     });
