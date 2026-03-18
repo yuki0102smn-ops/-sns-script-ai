@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const PLATFORMS = ["Instagram Reels", "TikTok", "YouTube Shorts", "X(Twitter)"];
+const PLATFORMS = ["Threads", "Instagram Reels", "TikTok", "YouTube Shorts", "X(Twitter)"];
 
 export default function Home() {
   const [product, setProduct] = useState("");
